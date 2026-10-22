@@ -1,13 +1,14 @@
 # Abhi's e-com
 
-A Django e-commerce demo with product categories, customer signup and login, a session-based cart, checkout, and order history.
+A Python full-stack e-commerce portfolio app built with Django, HTML, CSS, Bootstrap, SQLite, and a JavaScript-enhanced catalog backed by JSON API endpoints.
 
 ## Stack
 
 - Python 3.14
 - Django 6.0.5
 - SQLite
-- Django templates, HTML, and Bootstrap 5
+- Django templates, HTML5, CSS3, Bootstrap 5, and vanilla JavaScript
+- Same-origin JSON API for category and product browsing
 
 ## Run locally
 
@@ -24,6 +25,26 @@ python manage.py runserver 127.0.0.1:8000
 Open <http://127.0.0.1:8000/>. Use `/admin/` to add categories and products. Product images are stored in `media/`.
 
 Checkout records an order with payment on delivery; no payment provider is configured.
+
+## API
+
+The read-only JSON API powers catalog search, category filtering, and sorting in the storefront:
+
+- `GET /api/categories/` returns the available categories.
+- `GET /api/products/` returns products. Optional query parameters: `q` for name or description search, `category` for a category ID, and `ordering` (`name`, `price_asc`, or `price_desc`).
+- `GET /api/products/<id>/` returns one product or a JSON 404 response.
+
+Example: `/api/products/?q=laptop&ordering=price_asc`
+
+Product responses include the product ID, name, description, price, category, image URL, and product-detail URL. The storefront fetches this data with the browser Fetch API and updates the product cards without a full page reload.
+
+## Tests
+
+Run the Django test suite with:
+
+```bash
+python manage.py test
+```
 
 ## Configuration
 

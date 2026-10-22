@@ -6,10 +6,14 @@ from .views.login import login, logout
 from .views.products import product_detail
 from .views.cart import cart, add_to_cart, update_cart, remove_from_cart
 from .views.checkout import checkout, order_detail, order_list
+from .views.api import api_categories, api_product_detail, api_products
 #
 urlpatterns = [
     path("", home.as_view(), name="home"),
     path("product/<int:product_id>/", product_detail, name="product_detail"),
+    path("api/categories/", api_categories, name="api_categories"),
+    path("api/products/", api_products, name="api_products"),
+    path("api/products/<int:product_id>/", api_product_detail, name="api_product_detail"),
     path('signup/', signup.as_view(), name='signup'),
     path('login/', login.as_view(), name='login'),
     path('logout/', logout, name='logout'),

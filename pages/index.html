@@ -1,69 +1,62 @@
-{%extends 'theme.html'%}
+{% extends 'theme.html' %}
+{% load static %}
 
-{%block main%}
-        <div class="container">
-            <div class="row">
-                <!--categories list coloumns-->
-                <div class="col-lg-3">
-                    <div class="list-group border shadow ">
-                        <a href="/"
-                        class="mb-1">
-                        <button class="btn btn-outline-dark"
-                        style="width:10rem;">
+{% block main %}
+<main id="storefront" class="container py-4"
+      data-api-url="{% url 'api_products' %}"
+      data-category="{{ selected_category }}">
+    <div class="row g-4">
+        <aside class="col-lg-3" aria-label="Product categories">
+            <h2 class="h5 mb-3">Categories</h2>
+            <nav class="list-group category-list">
+                <a class="list-group-item list-group-item-action{% if not selected_category %} active{% endif %}"
+                   href="{% url 'home' %}" data-category=""{% if not selected_category %} aria-current="true"{% endif %}>All products</a>
+                {% for category in categories %}
+                <a class="list-group-item list-group-item-action{% if selected_category == category.id|stringformat:'s' %} active{% endif %}"
+                   href="?category={{ category.id }}" data-category="{{ category.id }}"{% if selected_category == category.id|stringformat:'s' %} aria-current="true"{% endif %}>{{ category.name }}</a>
+                {% endfor %}
+            </nav>
+        </aside>
 
-                            All Products
-
-                        </button>
-
-                        </a>
-
-                        {%for j in categories%}
-                        <a href="/?category={{j.id}}"
-                        class="mb-1">
-                        <button class="btn btn-outline-dark"
-                        style="width:10rem;">
-                            {{j.name}}
-
-                        </button>
-
-                        </a>
-
-                        {%endfor%}
-                    </div>
+        <section class="col-lg-9" aria-labelledby="products-heading">
+            <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+                <div>
+                    <h1 id="products-heading" class="h2 mb-1">Shop the catalog</h1>
+                    <p class="mb-0 text-muted">Find the right device for you.</p>
                 </div>
-
-                <!--products coloumns-->
-                <div class="col-lg-9">
-                    <div class="row mt-5">
-                {%for i in products%}
-                <div class="col-lg-4 col-md-6 col-12">
-
-                    <div class="card mb-5 shadow" style="width:16rem;height:30rem;">
-                        <div class="card-header">
-                            <img src="{{i.image.url}}"
-                            class="img-fluid">
-
-                        </div>
-                        <div class="card-body">
-                            <h5>{{i.name}}</h5>
-                            <h5>price:{{i.price}}</h5>
-
-                        </div>
-                        <div class="card-footer">
-                            <a href="{% url 'product_detail' i.id %}"
-                            class="btn btn-outline-dark">
-                                Book Now
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-                {%endfor%}
-            </div>
-
+                <div class="catalog-controls">
+                    <label class="visually-hidden" for="product-search">Search products</label>
+                    <input id="product-search" class="form-control" type="search" placeholder="Search products" autocomplete="off" value="{{ search_query }}">
+                    <label class="visually-hidden" for="product-sort">Sort products</label>
+                    <select id="product-sort" class="form-select" aria-label="Sort products">
+                        <option value="name"{% if selected_ordering == 'name' %} selected{% endif %}>Name: A to Z</option>
+                        <option value="price_asc"{% if selected_ordering == 'price_asc' %} selected{% endif %}>Price: low to high</option>
+                        <option value="price_desc"{% if selected_ordering == 'price_desc' %} selected{% endif %}>Price: high to low</option>
+                    </select>
                 </div>
             </div>
 
-        </div>
-
-{%endblock%}
+            <p id="product-status" class="small text-muted" aria-live="polite">{{ products|length }} product{{ products|length|pluralize }}</p>
+            <div id="product-grid" class="row g-3">
+                {% for product in products %}
+                <div class="col-xl-4 col-md-6">
+                    <article class="card product-card h-100">
+                        <a class="product-card-image" href="{% url 'product_detail' product.id %}" aria-label="View {{ product.name }}">
+                            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">{% else %}<span class="product-image-placeholder">No image</span>{% endif %}
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <p class="small text-muted mb-1">{{ product.category.name }}</p>
+                            <h3 class="h5 card-title">{{ product.name }}</h3>
+                            <p class="product-price mt-auto mb-3">Price: {{ product.price }}</p>
+                            <a class="btn btn-dark" href="{% url 'product_detail' product.id %}">View product</a>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+            <div id="product-empty" class="alert alert-info{% if products %} d-none{% endif %}" role="status">No products match your search.</div>
+        </section>
+    </div>
+</main>
+<script src="{% static 'shop/store.js' %}" defer></script>
+{% endblock %}
