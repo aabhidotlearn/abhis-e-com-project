@@ -1,0 +1,29 @@
+{% extends 'theme.html' %}
+
+{% block main %}
+<main class="container py-4">
+    <h1>Checkout</h1>
+    <div class="row g-4 mt-1">
+        <section class="col-lg-7">
+            <h2 class="h4">Shipping details</h2>
+            {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                <label class="form-label" for="shipping_address">Delivery address</label>
+                <textarea class="form-control" id="shipping_address" name="shipping_address" rows="4" required>{{ shipping_address }}</textarea>
+                <p class="text-muted mt-2">Payment is collected on delivery.</p>
+                <button class="btn btn-dark mt-2" type="submit">Place order</button>
+            </form>
+        </section>
+        <aside class="col-lg-5">
+            <h2 class="h4">Order summary</h2>
+            <ul class="list-group mb-3">
+                {% for item in items %}
+                <li class="list-group-item d-flex justify-content-between"><span>{{ item.product.name }} × {{ item.quantity }}</span><strong>{{ item.line_total }}</strong></li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between"><strong>Total</strong><strong>{{ total }}</strong></li>
+            </ul>
+        </aside>
+    </div>
+</main>
+{% endblock %}

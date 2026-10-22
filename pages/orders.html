@@ -1,0 +1,22 @@
+{% extends 'theme.html' %}
+
+{% block main %}
+<main class="container py-4">
+    <h1 class="mb-4">My orders</h1>
+    {% if orders %}
+    <div class="list-group">
+        {% for order in orders %}
+        <a class="list-group-item list-group-item-action" href="{% url 'order_detail' order.id %}">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+                <strong>Order #{{ order.id }}</strong>
+                <span>{{ order.created_at|date:"M j, Y g:i A" }}</span>
+                <span>Total: {{ order.total }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">You haven’t placed any orders yet. <a href="{% url 'home' %}">Browse products</a>.</div>
+    {% endif %}
+</main>
+{% endblock %}

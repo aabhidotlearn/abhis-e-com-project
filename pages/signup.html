@@ -1,0 +1,42 @@
+{% extends 'theme.html' %}
+
+{% block main %}
+<main class="auth-page">
+    <section class="auth-layout" aria-labelledby="signup-title">
+        <h1 class="auth-title" id="signup-title">Create an Account</h1>
+        <div class="auth-card">
+            {% if error %}
+            <div class="alert alert-warning auth-alert" role="alert">{{ error }}</div>
+            {% elif success %}
+            <div class="alert alert-success auth-alert" role="status">{{ success }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'signup' %}" class="auth-form">
+                {% csrf_token %}
+                <label class="auth-input-group">
+                    <span>First name</span>
+                    <input type="text" name="fn" value="{{ value.fn }}" autocomplete="given-name" required>
+                </label>
+                <label class="auth-input-group">
+                    <span>Last name</span>
+                    <input type="text" name="ln" value="{{ value.ln }}" autocomplete="family-name" required>
+                </label>
+                <label class="auth-input-group">
+                    <span>Email address</span>
+                    <input type="email" name="email" value="{{ value.email }}" autocomplete="email" required>
+                </label>
+                <label class="auth-input-group">
+                    <span>10-digit mobile number</span>
+                    <input type="tel" name="mobile" value="{{ value.mobile }}" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" required>
+                </label>
+                <label class="auth-input-group">
+                    <span>Password (at least 8 characters)</span>
+                    <input type="password" name="password" minlength="8" autocomplete="new-password" required>
+                </label>
+                <button class="auth-primary" type="submit">Register</button>
+            </form>
+        </div>
+        <a class="auth-secondary" href="{% url 'login' %}">Already registered? Log in</a>
+    </section>
+</main>
+{% endblock %}

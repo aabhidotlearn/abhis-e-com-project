@@ -1,0 +1,31 @@
+{% extends 'theme.html' %}
+
+{% block main %}
+<main class="auth-page">
+    <section class="auth-layout" aria-labelledby="login-title">
+        <h1 class="auth-title" id="login-title">User Login</h1>
+        <div class="auth-card">
+            {% if error %}
+            <div class="alert alert-warning auth-alert" role="alert">{{ error }}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}" class="auth-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <label class="auth-field">
+                    <span class="auth-field-icon" aria-hidden="true">&#128100;</span>
+                    <span class="visually-hidden">Email address</span>
+                    <input type="email" name="email" value="{{ email }}" placeholder="Email ID" autocomplete="email" required>
+                </label>
+                <label class="auth-field">
+                    <span class="auth-field-icon" aria-hidden="true">&#128274;</span>
+                    <span class="visually-hidden">Password</span>
+                    <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                </label>
+                <button class="auth-primary" type="submit">Log in</button>
+            </form>
+        </div>
+        <a class="auth-secondary" href="{% url 'signup' %}">Create an account</a>
+    </section>
+</main>
+{% endblock %}
